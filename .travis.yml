@@ -4,6 +4,8 @@ services:
 
 
 before_install:
+  - pwd
+  - ls
   - docker build -t pisxx/react-test -f client/Dockerfile.dev ./client
 
 script:
