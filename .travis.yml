@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+
+before_install:
+  - docker build -t pisxx/react-test -f client/Dockerfile.dev ./client
+
+script:
+  - docker run pisxx/react-test ls
+
+after_success:
+  - docker build -t pisxx/multi-client ./client
+  - docker build -t pisxx/multi-server ./server
+  - docker build -t pisxx/multi-worker ./worker
+  - docker build -t pisxx/multi-nginx  ./nginx
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push pisxx/multi-client
+  - docker push pisxx/multi-server
+  - docker push pisxx/multi-worker
+  - docker push pisxx/multi-nginx
